@@ -10,7 +10,7 @@ from .utils import get_page_context
 
 def group_posts(request, slug):
     group = get_object_or_404(Group, slug=slug)
-    posts = Post.objects.filter(group=group).order_by('-pub_date')
+    posts = group.posts.order_by('-pub_date')
     page_obj = get_page_context(request, posts, count_post=POSTS_PER_PAGE)
     context = {
         'group': group,
@@ -32,7 +32,7 @@ def index(request):
 
 def profile(request, username):
     author = get_object_or_404(User, username=username)
-    posts = Post.objects.filter(author=author)
+    posts = author.posts.order_by('-pub_date')
     posts_count = Post.objects.filter(author=author).count()
     page_obj = get_page_context(request, posts, count_post=POSTS_PER_PAGE)
     following = request.user.is_authenticated
